@@ -8,15 +8,15 @@ namespace SmartSchool.API.Models
     public class Professor
     {
        
-        public int ID { get; set; }
+        public int Id { get; set; }
         public string Nome { get; set; }
 
         public IEnumerable<Disciplina> Disciplinas { get; set; }
 
         public Professor(){}
-        public Professor(int iD, string nome)
+        public Professor(int id, string nome)
         {
-            ID = iD;
+            Id = id;
             Nome = nome;
         }
     }
