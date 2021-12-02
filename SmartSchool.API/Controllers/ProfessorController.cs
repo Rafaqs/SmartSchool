@@ -9,6 +9,7 @@ using SmartSchool.API.Data;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using SmartSchool.API.Dtos;
+using SmartSchool.API.Helpers;
 
 namespace SmartSchool.API.Controllers
 {
@@ -29,10 +30,12 @@ namespace SmartSchool.API.Controllers
 
         // GET: api/<ProfessorController>
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get([FromQuery] PageParams pageParams)
         {
-            var Professor = _repo.GetAllProfessores(true);
-            return Ok(_mapper.Map<IEnumerable<ProfessorDto>>(Professor));
+            var professor = await _repo.GetAllProfessoresAsync(pageParams, true);
+            var professorResult = _mapper.Map<IEnumerable<ProfessorDto>>(professor);
+            Response.AddPagination(professor.CurrentPage, professor.PageSize, professor.TotalCount, professor.TotalPages);
+            return Ok(professorResult);
         }
 
         // GET api/<ProfessorController>/5

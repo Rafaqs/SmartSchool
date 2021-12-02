@@ -8,6 +8,7 @@ using SmartSchool.API.Data;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using SmartSchool.API.Dtos;
+using SmartSchool.API.Helpers;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -33,10 +34,12 @@ namespace SmartSchool.API.Controllers
 
         // GET: api/<AlunoController>
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get([FromQuery]PageParams pageParams)
         {
-            var alunos = _repo.GetAllAlunos(true);
-            return Ok(_mapper.Map<IEnumerable<AlunoDto>>(alunos));
+            var alunos = await _repo.GetAllAlunosAsync(pageParams, true);
+            var alunosResult = _mapper.Map<IEnumerable<AlunoDto>>(alunos);
+            Response.AddPagination(alunos.CurrentPage, alunos.PageSize, alunos.TotalCount, alunos.TotalPages);
+            return Ok(alunosResult);
         }
         
         // GET api/<AlunoController>/5
